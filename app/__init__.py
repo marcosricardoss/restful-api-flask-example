@@ -12,8 +12,9 @@ def create_app(test_config=None):
         SECRET_KEY='dev',        
         SQLALCHEMY_DATABASE_URI='sqlite:///{}/database.sqlite3'.format(app.instance_path),
         SQLALCHEMY_TRACK_MODIFICATIONS=False
-    )    
+    )
     
+    app.app_context().push()
     db.init_app(app)
 
     if test_config is None:
