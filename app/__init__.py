@@ -6,6 +6,7 @@ from app.db import db
 from app.blueprints import auth
 
 def create_app(test_config=None):
+    
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -14,6 +15,7 @@ def create_app(test_config=None):
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
     
+    # initializing the database
     app.app_context().push()
     db.init_app(app)
 
@@ -33,7 +35,7 @@ def create_app(test_config=None):
 
     # a simple home page
     @app.route('/')
-    def hello():
+    def home():
         return 'Flask Restful API'       
     
     app.register_blueprint(auth.bp)
