@@ -14,9 +14,8 @@ def app():
         'TESTING': True,        
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///{}'.format(db_path),
         'SQLALCHEMY_TRACK_MODIFICATIONS': False
-    })        
+    })            
     
-    app.app_context().push()
     db.create_all()
     
     yield app    
