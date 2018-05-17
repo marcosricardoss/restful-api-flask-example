@@ -29,8 +29,19 @@ class AuthController:
             
             return res
 
+        # hashing password
         hashed_password = generate_password_hash(request.json['password'], method='sha256')
-        new_user = User(public_id=str(uuid.uuid4()), username=request.json['username'], password=hashed_password)
+        
+        # checking if is a administration
+        admin = False
+        if ("admin" in request.json) and (request.json['admin'].lower()=="true"):            
+            admin = True
+
+        # creating a new user
+        new_user = User(public_id=str(uuid.uuid4()), 
+                        username=request.json['username'], 
+                        password=hashed_password, 
+                        admin=admin)
         db.session.add(new_user)
         db.session.commit()
 
