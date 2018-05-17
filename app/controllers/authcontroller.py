@@ -9,6 +9,8 @@ from app.helper import Helper
 class AuthController:
     
     def register(self):
+        
+        # checking data request
         if (not request.json) or (not self._required_post_data_are_provided(request.json)):
             output = {            
                 "message": "Username or Password field not provided."
@@ -20,6 +22,7 @@ class AuthController:
 
         user = User.query.filter_by(username=request.json['username']).first()
 
+        # checking if username already exist
         if user:
             output = {            
                 "message": "Username already exist."
@@ -28,22 +31,8 @@ class AuthController:
             res.status_code = 409
             
             return res
-
-        # hashing password
-        hashed_password = generate_password_hash(request.json['password'], method='sha256')
         
-        # checking if is a administration
-        admin = False
-        if ("admin" in request.json) and (request.json['admin'].lower()=="true"):            
-            admin = True
-
-        # creating a new user
-        new_user = User(public_id=str(uuid.uuid4()), 
-                        username=request.json['username'], 
-                        password=hashed_password, 
-                        admin=admin)
-        db.session.add(new_user)
-        db.session.commit()
+        self._save(request.json)
 
         output = {            
                 "message": "User successfully created."
@@ -52,7 +41,26 @@ class AuthController:
         res.status_code = 201
         
         return res        
+
+
+    def _save(self, data):
         
+        data['public_id'] = str(uuid.uuid4())
+        
+        if "password" in data:
+            data['password'] = generate_password_hash(data['password'], method='sha256')
+        
+        if ("admin" in data) and (data['admin'].lower()=="true"):
+            data['admin'] = True
+        else:
+            data['admin'] = False
+        
+        user = User(**data)
+        db.session.add(user)
+        db.session.commit()
+        
+        return user
+
 
     def _required_post_data_are_provided(self, data):
         required_strings = ['username', 'password']
