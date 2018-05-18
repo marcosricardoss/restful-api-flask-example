@@ -1,4 +1,5 @@
 import os
+import app.handler as handler
 
 from flask import Flask
 
@@ -39,5 +40,7 @@ def create_app(test_config=None):
         return 'Flask Restful API'       
     
     app.register_blueprint(auth.bp)
+    handler.handlers(app)
 
     return app
+    
