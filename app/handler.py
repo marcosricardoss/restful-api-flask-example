@@ -1,6 +1,6 @@
 from flask import jsonify
 
-def handlers(app):
+def register_handlers(app):
 
     @app.errorhandler(400)
     def handle_invalid_usage(error):        
