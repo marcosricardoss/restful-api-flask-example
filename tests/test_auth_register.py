@@ -56,6 +56,21 @@ def test_register_admin_returns_status_code_201_with_msg_when_unique_username_pa
     assert result['message'] == "User successfully created." 
     assert user.admin
 
+def test_register_returns_status_code_400_with_msg_when_wrong_field_is_passed(client):
+
+    username = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(6)])
+    hashed_password = generate_password_hash("secret", method='sha256')
+
+    response = client.post('/auth/register', json={
+        'username': username, 
+        'password': hashed_password,
+        'xxxxxxxx': 'xxxxxxxx'
+    })
+
+    result = response.get_json()
+    assert response.status_code == 400
+        
+
 def test_register_returns_status_code_400_with_msg_when_only_username_is_passed(client):
 
     username = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(6)])
