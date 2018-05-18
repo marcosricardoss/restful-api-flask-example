@@ -8,7 +8,8 @@ from app.handler import register_handlers
 
 def create_app(test_config=None):
     
-    # create and configure the app
+    '''Create and configure the app.'''
+    
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',        
@@ -33,7 +34,7 @@ def create_app(test_config=None):
     # ensure the instance folder exists
     create_instance_folder(app)    
     
-    # creating the routes bases of the application
+    # creating the base routes of the application
     create_routes(app)
 
     # registering the blueprint to application
@@ -46,6 +47,9 @@ def create_app(test_config=None):
 
 
 def create_instance_folder(app):
+
+    '''Create the instance folder.'''
+
     try: 
         os.makedirs(app.instance_path)
     except OSError: 
@@ -53,5 +57,8 @@ def create_instance_folder(app):
 
 
 def create_routes(app):    
+
+    '''Create the route bases of the application'''
+
     @app.route('/')
     def home():return 'Flask Restful API'       
